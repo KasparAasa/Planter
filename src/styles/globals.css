@@ -10,3 +10,11 @@ body {
 a {
     @apply hover:text-blue-600 transition-colors duration-200;
 }
+
+.linkText {
+    @apply block text-gray-200 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2
+}
+
+.linkTextSm {
+    @apply text-sm block text-gray-400 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2
+}
