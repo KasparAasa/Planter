@@ -6,11 +6,11 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 const mainMenu = [
   <Link key={'/'} href={'/'}
         className={'linkText'}>Dashboard</Link>,
-  <Link key={'Plants'} href={'Plants'}
+  <Link key={'Plants'} href={'plants'}
         className={'linkText'}>Plants</Link>,
-  <Link key={'Store'} href={'Store'}
+  <Link key={'Store'} href={'store'}
         className={'linkText'}>Store</Link>,
-  <Link key={'Tips'} href={'Tips'}
+  <Link key={'Tips'} href={'tips'}
         className={'linkText'}>Tips</Link>,
 ]
 const microMenu = [
