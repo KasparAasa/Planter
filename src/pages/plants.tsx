@@ -1,5 +1,5 @@
 import {Layout} from '@/components/Layout'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import * as Dialog from '@radix-ui/react-dialog'
 import {Cross2Icon} from '@radix-ui/react-icons'
@@ -14,6 +14,7 @@ import {
   Toxicity,
   WaterLevel,
 } from '@/constants/plantAttributes'
+import {FormEventHandler, useRef} from 'react'
 
 interface Plant {
   plantName: string
@@ -28,11 +29,43 @@ interface Plant {
   id: string
 }
 
+
 export default function Plants() {
 
-  const [plants, setPlants] = useState<Plant[]>([]) //siia panna empty list ja siis saab lisama hakata
+  const [plants, setPlants] = useState<Plant[]>([])
   const [plantNameField, setPlantNameField] = useState('')
+  const fileInput = useRef<HTMLInputElement>(null)
 
+
+  useEffect(() => {
+    if (plants.length === 0) {
+      return
+    }
+    localStorage.setItem('plants', JSON.stringify(plants))
+  }, [plants])
+
+  useEffect(() => {
+    const plantString = localStorage.getItem('plants')
+    if (plantString) {
+      const plants = JSON.parse(plantString)
+      if (plants) {
+        setPlants(plants)
+      }
+    }
+  }, [])
+
+  const uploadFile: FormEventHandler<HTMLInputElement> = (event) => {
+    if (!event.currentTarget.files?.length) {
+      return
+    }
+
+    for (let i = 0; i < event.currentTarget.files.length; i++) {
+      const file = event.currentTarget.files.item(i)
+
+
+      // Do something with file
+    }
+  }
 
   function addPlant() {
     const newList = [
@@ -59,24 +92,15 @@ export default function Plants() {
     setPlants(newList)
   }
 
-  // function addPresetPlant(plantName: string, latinName: string, img: string, light: string, water: string, soil: string, humidity: string, toxicity: string, room: string) {
-  //   const newList = [
-  //     ...plants,
-  //     {
-  //       plantName: plantName,
-  //       latinName: latinName,
-  //       img: img,
-  //       light: light,
-  //       water: water,
-  //       soil: soil,
-  //       humidity: humidity,
-  //       toxicity: toxicity,
-  //       room: room,
-  //       id: uuidv4(),
-  //     },
-  //   ]
-  //   setPlants(newList)
-  // }
+  function deletePlant(id: string) {
+    const newList = plants.filter(plant => plant.id !== id)
+    setPlants(newList)
+
+    if (newList.length === 0) {
+      localStorage.removeItem('plants')
+    }
+  }
+
 
   const searchedPlants = (plantTypes
       .filter(plant => plant.plantName.toLowerCase().match(`${plantNameField.toLowerCase()}`))
@@ -157,9 +181,9 @@ export default function Plants() {
                       <div>{plant.room}</div>
                     </div>
                     <div className={'flex justify-evenly flex-wrap mr-5 gap-6'}>
-                      <div className={'flex'}>LW</div>
-                      <div className={'flex'}>LF</div>
-                      <div className={'flex'}>LRP</div>
+                      <div className={''}><i className="fa-light fa-droplet fa-xl"></i></div>
+                      <div className={''}><i className="fa-light fa-bag-seedling fa-xl"></i></div>
+                      <div className={''}><i className="fa-light fa-hand-holding-seedling fa-xl"></i></div>
                     </div>
                   </div>
                 </div>
@@ -179,11 +203,34 @@ export default function Plants() {
                       </div>
                     )}
                   </div>
-                  <div className={'flex gap-1'}>
-                    <img className={'w-16'} src={'plantPlaceholder.jpeg'}/>
-                    <img className={'w-16'} src={'plantPlaceholder.jpeg'}/>
-                    <img className={'w-16'} src={'plantPlaceholder.jpeg'}/>
-                    <img className={'w-16'} src={'plantPlaceholder.jpeg'}/>
+                  <div className={'flex justify-between mb-1'}>
+                    <div className={'flex gap-1 items-center'}>
+                      <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
+                      <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
+                      <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
+                      <form>
+                        <input type={'file'} className={'hidden'} ref={fileInput} onInput={uploadFile}/>
+                        <button
+                          onClick={e => {
+                            e.preventDefault()
+                            fileInput.current?.click()
+                          }}
+                        >
+                          <i className={'text-gray-300 hover:text-gray-500 ml-2 fa-light fa-circle-plus fa-2xl'}></i>
+                        </button>
+                      </form>
+                    </div>
+                    <div className={'flex flex-col items-end justify-center gap-2 mr-5 w-28'}>
+                      <button
+                        className={' w-full bg-gray-300 hover:text-gray-50 text-sm block text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}>
+                        Edit plant
+                      </button>
+                      <button
+                        className={'w-full bg-gray-300 hover:text-gray-950 text-sm block text-gray-900 hover:bg-red-400 rounded px-2 py-2 sm:mt-0 sm:ml-2'}
+                        onClick={() => deletePlant(plant.id)}>
+                        Delete plant
+                      </button>
+                    </div>
                   </div>
                 </div>
               </Collapsible.Content>

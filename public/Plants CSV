@@ -1,0 +1,62 @@
+plantName,latinName,light,water,soil,humidity,toxicity
+Spider Plant,Chlorophytum comosum,medium-high,medium,moist,medium,non-toxic
+Snake Plant,Sansevieria trifasciata,medium,low,dry,low,low-toxic
+ZZ Plant,Zamioculcas zamiifolia,medium,low,medium-dry,low,low-toxic
+Pothos,Epipremnum aureum,medium,medium,medium-dry,medium-high,low-toxic
+Peace Lily,Spathiphyllum spp.,medium,medium,medium-dry,high,toxic
+Aloe Vera,Aloe vera,medium-high,low,dry,medium,low-toxic
+English Ivy,Hedera helix,medium,medium,medium-dry,medium-high,toxic
+Rubber Plant,Ficus elastica,medium-high,medium,medium-dry,medium,toxic
+Monstera Deliciosa,Monstera deliciosa,medium-high,medium,medium-dry,medium-high,toxic
+Dracaena,Dracaena spp.,medium-low,medium,moist,medium,non-toxic
+Philodendron,Philodendron spp.,medium,medium,moist,medium,toxic
+Boston Fern,Nephrolepis exaltata,medium-high,high,moist,high,toxic
+Jade Plant,Crassula ovata,medium,low,dry,medium,non-toxic
+Chinese Evergreen,Aglaonema spp.,low,low-toxic
+Bird's Nest Fern,Asplenium nidus,medium-high,high,moist,high,non-toxic
+African Violet,Saintpaulia spp.,medium-low,medium,moist,medium,toxic
+String of Pearls,Curio rowleyanus,high,low,dry,low-toxic
+Swiss Cheese Plant,Monstera adansonii,medium,medium,moist,medium,toxic
+Prayer Plant,Maranta leuconeura,medium-low,medium-dry,moist,medium,toxic
+Ponytail Palm,Beaucarnea recurvata,medium-low,low,dry,low-toxic
+Fiddle Leaf Fig,Ficus lyrata,high,medium-dry,moist,medium-low,toxic
+Golden Pothos,Epipremnum aureum,low,medium,moist,medium,low-toxic
+Heartleaf Philodendron,Philodendron hederaceum,medium-low,medium,moist,medium,toxic
+Calathea,Calathea spp.,medium,medium,moist,medium,toxic
+Maranta,Maranta spp.,medium-low,medium,moist,medium,toxic
+Air Plant,Tillandsia spp.,medium,very-low,moist,medium,non-toxic
+Chinese Money Plant,Pilea peperomioides,medium,low-toxic
+Dieffenbachia,Dieffenbachia spp.,medium-low,medium,moist,medium,toxic
+Devil's Ivy,Epipremnum aureum,low,medium,moist,medium,low-toxic
+Fittonia,Fittonia spp.,medium,medium,moist,medium,toxic
+Anthurium,Anthurium andraeanum,medium,low,moist,medium,toxic
+Tradescantia,Tradescantia spp.,medium,medium,moist,medium,toxic
+Peperomia,Peperomia spp.,medium,medium,moist,medium,non-toxic
+Croton,Codiaeum variegatum,high,medium-dry,moist,medium,toxic
+Parlor Palm,Chamaedorea elegans,low,medium,moist,medium-low,non-toxic
+Wandering Jew,Tradescantia zebrina,medium,medium-dry,moist,medium,toxic
+Areca Palm,Dypsis lutescens,medium,low,moist,medium-low,toxic
+Nerve Plant,Fittonia spp.,medium,high,moist,medium,non-toxic
+Aluminum Plant,Pilea cadierei,medium,medium,moist,medium,non-toxic
+Christmas Cactus,Schlumbergera spp.,medium,low,dry,medium-low,non-toxic
+Arrowhead Plant,Syngonium podophyllum,medium,medium-dry,moist,medium,toxic
+Weeping Fig,Ficus benjamina,medium-low,medium-dry,moist,medium,toxic
+Zebra Plant,Aphelandra squarrosa,medium-high,medium,moist,medium-high,toxic
+Cast Iron Plant,Aspidistra elatior,low,medium-dry,moist,medium-low,toxic
+Boston Fern,Nephrolepis exaltata 'Bostoniensis',medium-high,high,moist,high,toxic
+Peacock Plant,Calathea makoyana,medium-low,medium,moist,medium,toxic
+Bunny Ear Cactus,Opuntia microdasys,high,low,dry,low-toxic
+String of Hearts,Ceropegia woodii,medium,low,dry,medium-low,toxic
+Chinese Evergreen,Aglaonema commutatum,low,low-toxic
+Moth Orchid,Phalaenopsis amabilis,medium,medium-dry,moist,medium,toxic
+Basil,Ocimum Basilicum,high,medium,moist,medium,edible
+Rosemary,Salvia Rosmarinus,high,low,dry,low-toxic
+Umbrella Plant,Schefflera Actinophylla,medium-low,medium,moist,medium,toxic
+Money Tree,Guiana Chestnut,medium,low,dry,medium,toxic
+Jasmine,Jasminum,medium,medium-dry,moist,medium,non-toxic
+Silver Leaf Philodendron,Philodendron Brandtianum,medium,medium,moist,medium,toxic
+Polka Dot Begonia,Begonia Maculata,medium,medium,moist,medium,toxic
+Black Velvet Alocasia,Alocasia Reginula,medium-high,medium,moist,medium,toxic
+Ficus Audrey,Ficus benghalensis,medium,medium-dry,moist,medium,toxic
+Homalomena Selby,Homalomena hybrid,medium,medium,moist,medium,toxic
+Sweetheart Plant,Hoya Kerrii,medium,low,dry,low-toxic
