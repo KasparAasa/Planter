@@ -4,7 +4,6 @@ import * as Collapsible from '@radix-ui/react-collapsible'
 import * as Dialog from '@radix-ui/react-dialog'
 import {Cross2Icon} from '@radix-ui/react-icons'
 import {v4 as uuidv4} from 'uuid'
-import {plantTypes} from '@/constants/plantTypes'
 import {
   Humidity,
   LightLevel,
@@ -15,6 +14,9 @@ import {
   WaterLevel,
 } from '@/constants/plantAttributes'
 import {FormEventHandler, useRef} from 'react'
+import {parse as csv} from 'csv-parse/browser/esm'
+import {camelCase} from 'lodash-es'
+import Link from 'next/link'
 
 interface Plant {
   plantName: string
@@ -29,12 +31,28 @@ interface Plant {
   id: string
 }
 
+interface Plantv2 {
+  name: string
+  latinName?: string
+  lightNeeds?: LightLevel
+  waterNeeds?: WaterLevel
+  soilNeeds?: SoilType
+  airMoisture?: Humidity
+  toxicity?: Toxicity
+  shortText?: string
+  longText?: string
+  img?: string
+  id: string
+  room?: string
+}
+
 
 export default function Plants() {
-
-  const [plants, setPlants] = useState<Plant[]>([])
+  const [presetPlants, setPresetPlants] = useState<Plantv2[]>([])
+  const [plants, setPlants] = useState<Plantv2[]>([])
   const [plantNameField, setPlantNameField] = useState('')
   const fileInput = useRef<HTMLInputElement>(null)
+  const [deleteBool, setDeleteBool] = useState(false)
 
 
   useEffect(() => {
@@ -71,7 +89,7 @@ export default function Plants() {
     const newList = [
       ...plants,
       {
-        plantName: plantNameField,
+        name: plantNameField,
         id: uuidv4(),
       },
     ]
@@ -81,7 +99,7 @@ export default function Plants() {
     setPlantNameField('')
   }
 
-  function addPresetPlant(plant: Omit<Plant, 'id'>) {
+  function addPresetPlant(plant: Omit<Plantv2, 'id'>) {
     const newList = [
       ...plants,
       {
@@ -101,19 +119,28 @@ export default function Plants() {
     }
   }
 
+  async function createPresetList() {
+    const response = await fetch('/plants.csv')
+    // Turn response into text
+    const results = await response.text()
+    // Pass the text into csv()
+    // Use callback to save to state
+    csv(results.trim(), {columns: true}, (err, plants) => setPresetPlants(plants))
+  }
 
-  const searchedPlants = (plantTypes
-      .filter(plant => plant.plantName.toLowerCase().match(`${plantNameField.toLowerCase()}`))
+  const searchedPlants = (presetPlants
+      .filter(plant => plant.name.toLowerCase().match(`${plantNameField.toLowerCase()}`))
   )
+
 
   return (
     <Layout>
       <div className={'flex flex-col py-3 w-full max-w-none'}>
         <div className={'flex justify-end gap-3'}>
+          <button onClick={() => setDeleteBool(!deleteBool)}>Remove Plant</button>
           <Dialog.Root>
-
             <Dialog.Trigger asChild>
-              <button>Add plant</button>
+              <button onClick={createPresetList}>Add plant</button>
             </Dialog.Trigger>
 
             <Dialog.Portal>
@@ -143,10 +170,10 @@ export default function Plants() {
                           <div className={'flex'}>
                             <div className={'rounded w-12 h-14 flex'}>
                               <img className={'w-full object-cover rounded'}
-                                   src={`/plantTypePictures/${plant.img}`}/>
+                                   src={`/plantTypePictures/${camelCase(plant.name)}.webp`}/>
                             </div>
                             <div className={'flex items-center ml-2'}>
-                              {plant.plantName}
+                              {plant.name}
                             </div>
                           </div>
                         </button>
@@ -171,12 +198,12 @@ export default function Plants() {
               <Collapsible.Trigger asChild>
                 <div className={'flex border-gray-200 border-2 hover:bg-slate-100'}>
                   <div>
-                    <img className={'w-24 h-28 object-cover'} src={`/plantTypePictures/${plant.img}`}/>
+                    <img className={'w-24 h-28 object-cover'} src={`/plantTypePictures/${camelCase(plant.name)}.webp`}/>
                   </div>
 
                   <div className={'flex justify-between w-full items-center'}>
                     <div className={'flex flex-col ml-3'}>
-                      <div>{plant.plantName}</div>
+                      <div>{plant.name}</div>
                       <div className={'italic'}>{plant.latinName}</div>
                       <div>{plant.room}</div>
                     </div>
@@ -184,6 +211,13 @@ export default function Plants() {
                       <div className={''}><i className="fa-light fa-droplet fa-xl"></i></div>
                       <div className={''}><i className="fa-light fa-bag-seedling fa-xl"></i></div>
                       <div className={''}><i className="fa-light fa-hand-holding-seedling fa-xl"></i></div>
+                      <div>
+                        {deleteBool ? <button
+                          className={'w-full bg-gray-300 hover:text-gray-950 text-sm block text-gray-900 hover:bg-red-400 rounded px-2 py-2 sm:mt-0 sm:ml-2'}
+                          onClick={() => deletePlant(plant.id)}>
+                          Delete plant
+                        </button> : ''}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -191,17 +225,7 @@ export default function Plants() {
               <Collapsible.Content>
                 <div className={'flex border-gray-200 border-2 border-t-0 flex-col'}>
                   <div className={'flex m-2 gap-2'}>
-                    {plant.light && (
-                      <div>
-                        {plant.plantName} requires {plant.light} light levels. {LightLevelDescription[plant.light]}
-                      </div>
-                    )}
-
-                    {plant.water && (
-                      <div>
-                        {plant.plantName} has {plant.water} water needs. {WaterLevelDescription[plant.water]}
-                      </div>
-                    )}
+                    {plant.shortText}
                   </div>
                   <div className={'flex justify-between mb-1'}>
                     <div className={'flex gap-1 items-center'}>
@@ -222,14 +246,15 @@ export default function Plants() {
                     </div>
                     <div className={'flex flex-col items-end justify-center gap-2 mr-5 w-28'}>
                       <button
-                        className={' w-full bg-gray-300 hover:text-gray-50 text-sm block text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}>
+                        className={'w-full bg-gray-300 hover:text-gray-50 text-sm text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}>
                         Edit plant
                       </button>
-                      <button
-                        className={'w-full bg-gray-300 hover:text-gray-950 text-sm block text-gray-900 hover:bg-red-400 rounded px-2 py-2 sm:mt-0 sm:ml-2'}
-                        onClick={() => deletePlant(plant.id)}>
-                        Delete plant
-                      </button>
+                      <Link
+                        key={'Plant Description'}
+                        href={'plantDescription'}
+                        className={'flex justify-center w-full bg-gray-300 hover:text-gray-50 text-sm text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}>
+                        Learn more
+                      </Link>
                     </div>
                   </div>
                 </div>
