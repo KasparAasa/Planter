@@ -1,35 +1,13 @@
 import {Layout} from '@/components/Layout'
-import React, {useEffect, useState} from 'react'
+import React, {FormEventHandler, useEffect, useRef, useState} from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
 import * as Dialog from '@radix-ui/react-dialog'
 import {Cross2Icon} from '@radix-ui/react-icons'
 import {v4 as uuidv4} from 'uuid'
-import {
-  Humidity,
-  LightLevel,
-  LightLevelDescription,
-  WaterLevelDescription,
-  SoilType,
-  Toxicity,
-  WaterLevel,
-} from '@/constants/plantAttributes'
-import {FormEventHandler, useRef} from 'react'
+import {Humidity, LightLevel, SoilType, Toxicity, WaterLevel,} from '@/constants/plantAttributes'
 import {parse as csv} from 'csv-parse/browser/esm'
 import {camelCase} from 'lodash-es'
 import Link from 'next/link'
-
-interface Plant {
-  plantName: string
-  latinName?: string
-  img?: string
-  light?: LightLevel
-  water?: WaterLevel
-  soil?: SoilType
-  humidity?: Humidity
-  toxicity?: Toxicity
-  room?: string
-  id: string
-}
 
 interface Plantv2 {
   name: string
@@ -53,7 +31,7 @@ export default function Plants() {
   const [plantNameField, setPlantNameField] = useState('')
   const fileInput = useRef<HTMLInputElement>(null)
   const [deleteBool, setDeleteBool] = useState(false)
-
+  const [editBool, setEditBool] = useState(false)
 
   useEffect(() => {
     if (plants.length === 0) {
@@ -131,6 +109,11 @@ export default function Plants() {
   const searchedPlants = (presetPlants
       .filter(plant => plant.name.toLowerCase().match(`${plantNameField.toLowerCase()}`))
   )
+
+  const handleSubmit = async (event: any) => {
+    event.preventDefault()
+
+  }
 
 
   return (
@@ -227,36 +210,58 @@ export default function Plants() {
                   <div className={'flex m-2 gap-2'}>
                     {plant.shortText}
                   </div>
-                  <div className={'flex justify-between mb-1'}>
-                    <div className={'flex gap-1 items-center'}>
-                      <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
-                      <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
-                      <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
-                      <form>
-                        <input type={'file'} className={'hidden'} ref={fileInput} onInput={uploadFile}/>
+                  <div>
+                    <div className={'flex justify-between mb-1'}>
+                      <div className={'flex gap-1 items-center'}>
+                        <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
+                        <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
+                        <img className={'w-20'} src={'plantPlaceholder.jpeg'}/>
+                        <form>
+                          <input type={'file'} className={'hidden'} ref={fileInput} onInput={uploadFile}/>
+                          <button
+                            onClick={e => {
+                              e.preventDefault()
+                              fileInput.current?.click()
+                            }}
+                          >
+                            <i className={'text-gray-300 hover:text-gray-500 ml-2 fa-light fa-circle-plus fa-2xl'}></i>
+                          </button>
+                        </form>
+                      </div>
+                      <div className={'flex flex-col items-end justify-center gap-2 mr-5 w-28'}>
                         <button
-                          onClick={e => {
-                            e.preventDefault()
-                            fileInput.current?.click()
-                          }}
-                        >
-                          <i className={'text-gray-300 hover:text-gray-500 ml-2 fa-light fa-circle-plus fa-2xl'}></i>
+                          className={'w-full bg-gray-300 hover:text-gray-50 text-sm text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}
+                          onClick={() => setEditBool(!editBool)}>
+                          Edit plant
                         </button>
-                      </form>
+                        <Link
+                          key={'Plant Description'}
+                          href={'/plantDescription'}
+                          className={'flex justify-center w-full bg-gray-300 hover:text-gray-50 text-sm text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}>
+                          Learn more
+                        </Link>
+                      </div>
                     </div>
-                    <div className={'flex flex-col items-end justify-center gap-2 mr-5 w-28'}>
-                      <button
-                        className={'w-full bg-gray-300 hover:text-gray-50 text-sm text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}>
-                        Edit plant
-                      </button>
-                      <Link
-                        key={'Plant Description'}
-                        href={'plantDescription'}
-                        className={'flex justify-center w-full bg-gray-300 hover:text-gray-50 text-sm text-gray-900 hover:bg-gray-700 rounded px-2 py-2 sm:mt-0 sm:ml-2'}>
-                        Learn more
-                      </Link>
-                    </div>
+                    {/*
+                    1. Have a form that passes plant to a function with onPost
+                    2. In the function event.preventDefault() to stop refresh
+                    3. set plant.waterNeeds to the option field selected waterNeeds.
+                    4. repeat for all options
+                    */}
+                    {editBool ?
+                      <form method={'post'} onSubmit={handleSubmit}>
+                        <label>
+                          Select your plant water needs:
+                          <select name={'waterNeeds'} defaultValue={plant.waterNeeds}>
+                            <option value={'dry2d'}>Very low</option>
+                            <option value={'dry'}>Low</option>
+                            <option value={'dry2in'}>Medium</option>
+                            <option value={'moist'}>High</option>
+                          </select>
+                        </label>
+                      </form> : ''}
                   </div>
+
                 </div>
               </Collapsible.Content>
             </Collapsible.Root>,
